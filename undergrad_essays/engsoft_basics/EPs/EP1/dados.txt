@@ -1,0 +1,13 @@
+Bruno Henrique Lobo 1234567 10.0
+Gustavo Coxa 1234568 10.0
+Flavio Paizao 1234569 10.0
+Dudu Coracao 1234570 5.0
+Renan Rico Frances 1234571 5.0
+Nelson Praiero 1234572 6.0
+Cambara Menossi Mauricio 1234573 4.0
+
+Media da classe:	7,14
+Desvio-Padrao  :	2,53
+Maior nota     :	10,00
+Menor nota     :	4,00
+Moda           :	10.0 
