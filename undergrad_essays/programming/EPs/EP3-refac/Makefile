@@ -15,16 +15,16 @@ EXEC = main
 
 .PHONY: all clean run
 
-all: $(EXEC)
+clean:
+	rm -rf $(OBJ_DIR)/*.o $(EXEC)
+
+all: clean $(EXEC)
 
 $(EXEC): $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
-
-clean:
-	rm -rf $(OBJ_DIR)/*.o $(EXEC)
 
 run: all
 	./$(EXEC)
