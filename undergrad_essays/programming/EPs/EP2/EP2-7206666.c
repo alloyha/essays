@@ -1,7 +1,7 @@
 /**********************************************************************/
-/**                                                                  **/
-/**   Bruno Henrique Lôbo Netto Peixoto          Número USP 7206666  **/
-/**   Exercício-Programa 1 - EP1                                     **/
+/**                                                                 **/
+/**   Bruno Henrique Lï¿½bo Netto Peixoto          Nï¿½mero USP 7206666  **/
+/**   Exercicio-Programa 1 - EP1                                     **/
 /**   Professor: Nina S. T. Hirata                                   **/
 /**   Turma: 8                                                       **/
 /**                                                                  **/

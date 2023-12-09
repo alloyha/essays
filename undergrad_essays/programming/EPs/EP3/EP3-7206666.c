@@ -1,6 +1,6 @@
 /**********************************************************************/
 /**                                                                  **/
-/**   Bruno Henrique Lôbo Netto Peixoto          Número USP 7206666  **/
+/**   Bruno Henrique Lobo Netto Peixoto          Número USP 7206666  **/
 /**   Exercício-Programa 3 - EP3                                     **/
 /**   Professor: Nina S. T. Hirata                                   **/
 /**   Turma: 8                                                       **/
@@ -10,83 +10,66 @@
 #include <stdio.h>
 #include <math.h>
 
-
-/* massa da terra */
+// Massa da Terra
 #define MTERRA   5.97e+24
 
-/* massa da lua */
+// Massa da Lua
 #define MLUA     7.35e+22
 
-/* constante gravitacional universal */
+// Constante gravitacional universal
 #define G        8.65e-13
 
-/* raio da terra */
+// Raio da Terra
 #define RTERRA   6378
 
-/* raio da lua */
+// Raio da Lua
 #define RLUA     1738
 
-/* posicoes (fixas) da terra e lua no sistema cartesiano */
+// Posicoes (fixas) da terra e lua no sistema cartesiano
 #define X_T          0
 #define Y_T          0
 #define X_L          D
 #define Y_L          0
 
-/* distancia da terra a lua */
+// Distancia da terra a lua
 #define D        384400
 
 
-/* definicoes usadas para exibir */
+// Definicoes usadas para exibir
 #define MAXLINHA    25
 #define MAXCOL      80
 #define LARGURA     5414
 
-
-/* Outras */
+// Outras
 #define FILENAME_MAXTAM   128
-
 #define EPS         0.00001
-
-
-
 
 /* ----------------------- *
  * Prototipo das funcoes   *
  * ----------------------- */
-
 void espere_enter( ) ;
-
 int sao_iguais(float x1, float x2) ;
-
 float distancia(float x1, float y1, float x2, float y2) ;
-
 float velocidade_esc(float xA, float yA,
                      float mA,
                      float x, float y) ;
-
 void aceleracao_gravitacional(float xA, float yA, float mA,
 			      float x,  float y,
 			      float *ax, float *ay) ;
-
 void aceleracao_resultante(float xA, float yA, float mA,
 		float xB, float yB, float mB,
 		float x, float y, float *ax, float *ay) ;
-
 void ponto_L1(float xA, float yA, float mA,
 		  float xB, float yB, float mB,
 		  float *x,  float *y) ;
-
 void quadrante(float x, float y, int *i, int *j) ;
-
 int mostre_mapa(int iT, int jT, int iL, int jL,
                 float x, float y, int *iN, int *jN) ;
-
 void mostre_dados(float hora,
 		  float distancia_percorrida,
 		  float x,  float y,
 		  float vx, float vy,
 		  float ax,   float ay ) ;
-
 
 /* ----------------------- *
  * MAIN                    *
@@ -98,7 +81,9 @@ int main() {
   char  nome_arquivo[FILENAME_MAXTAM] ;
   char  codigo ;
 
-  float xA, yA, mA, x, y, ax, ay, xB, yB, mB, vx, vy, hora_max, dt, hora_viagem, x0, y0,vx0,vy0, distancia_percorrida;
+  float x0, y0, vx0, vy0, x, y, vx, vy, ax, ay;
+  float xA, yA, mA, xB, yB, mB; 
+  float hora_max, dt, hora_viagem, distancia_percorrida;
   int iT, jT, iL, jL,iN, jN, mapa, flag=0;
 
   printf("\nArquivo de entrada :  ") ;
@@ -115,8 +100,6 @@ int main() {
   /* limpa o \n ... */
   scanf("%c", &codigo) ;
 
-
-
   /* laco principal */
   while(!feof(entrada)) {
 
@@ -125,10 +108,18 @@ int main() {
     switch (codigo) {
 
     case 'a':
-        fscanf(entrada,"%f %f", &xA, &yA); /*Posição do corpo celeste*/
-        fscanf(entrada,"%f", &mA); /*Massa do Corpo celeste*/
-        fscanf(entrada,"%f %f", &x, &y); /*Posição nave*/
-        aceleracao_gravitacional(xA,yA,mA,x,y,&ax,&ay); /*Aceleração gravitacional da nave em relação ao corpo celeste*/
+       /*Posição do corpo celeste*/
+        fscanf(entrada,"%f %f", &xA, &yA);
+
+        /*Massa do Corpo celeste*/
+        fscanf(entrada,"%f", &mA);
+
+        /*Posição nave*/    
+        fscanf(entrada,"%f %f", &x, &y);
+
+        /*Aceleração gravitacional da nave em relação ao corpo celeste*/
+        aceleracao_gravitacional(xA,yA,mA,x,y,&ax,&ay);
+
         printf("Opcao [%c]:\n", codigo);
         printf(" Posicao do corpo         : ( %.2f , %.2f )\n", xA, yA);
         printf(" Massa do corpo           : %.2e\n", mA);
@@ -138,52 +129,82 @@ int main() {
 
       break ;
 
-
+    // Exibe acelerações
     case 'A':
-        fscanf(entrada,"%f %f", &xA, &yA); /*Posição 1*/
-        fscanf(entrada,"%f", &mA); /*Massa 1*/
-        fscanf(entrada,"%f %f", &xB, &yB); /*Posição 2*/
-        fscanf(entrada,"%f", &mB); /*Massa 2*/
-        fscanf(entrada,"%f %f", &x, &y); /*Posição nave*/
+        /*Posição 1*/
+        fscanf(entrada,"%f %f", &xA, &yA); 
+        
+        /*Massa 1*/
+        fscanf(entrada,"%f", &mA);
+
+        /*Posição 2*/
+        fscanf(entrada,"%f %f", &xB, &yB); 
+        
+        /*Massa 2*/
+        fscanf(entrada,"%f", &mB);
+
+        /*Posição nave*/
+        fscanf(entrada,"%f %f", &x, &y);
+
         printf("Opcao [%c]:\n",codigo);
         printf(" Posicao do corpo 1 : ( %.2f , %.2f )\n", xA, yA);
         printf(" Massa do corpo 1   : %.2e\n", mA);
         printf(" Posicao do corpo 2 : ( %.2f , %.2f )\n", xB, yB);
         printf(" Massa do corpo 2   : %.2e\n", mB);
         printf(" Posicao da nave    : ( %.2f , %.2f )\n\n",x,y);
-        aceleracao_gravitacional(xA,yA,mA,x,y,&ax,&ay); /*aceleração resultante em relação a 1*/
+        
+        /*aceleração resultante em relação a 1*/
+        aceleracao_gravitacional(xA,yA,mA,x,y,&ax,&ay);
         printf(" Aceleracao gravitacional (corpo 1) : ( %.2f , %.2f )\n",ax, ay);
-        aceleracao_gravitacional(xB,yB,mB,x,y,&ax,&ay); /*Aceleração gravit. em relação a 2*/
+        
+        /*Aceleração gravit. em relação a 2*/
+        aceleracao_gravitacional(xB,yB,mB,x,y,&ax,&ay); 
         printf(" Aceleracao gravitacional (corpo 2) : ( %.2f , %.2f )\n",ax, ay);
-        aceleracao_resultante(xA,yA,mA,xB,yB,mB,x,y,&ax,&ay); /*Aceleração resultante da nave em relação a 1 e 2*/
+        
+        /*Aceleração resultante da nave em relação a 1 e 2*/
+        aceleracao_resultante(xA,yA,mA,xB,yB,mB,x,y,&ax,&ay); 
         printf(" Aceleracao gravitacional resultante: ( %.2f , %.2f )\n\n",ax, ay);
+        
         espere_enter();
-
       break ;
 
-
+    // Exibe distâncias e velocidades
     case 'e':
+        // Posição do corpo celeste
+        fscanf(entrada,"%f %f", &xA, &yA); 
+        
+        // Massa do Corpo celeste
+        fscanf(entrada,"%f", &mA);
 
-        fscanf(entrada,"%f %f", &xA, &yA); /*Posição do corpo celeste*/
-        fscanf(entrada,"%f", &mA); /*Massa do Corpo celeste*/
-        fscanf(entrada,"%f %f", &x, &y); /*Posição nave*/
+        // Posição nave
+        fscanf(entrada,"%f %f", &x, &y);
+        
         printf("Opcao [%c]:\n", codigo);
         printf(" Posicao do corpo          : ( %.2f , %.2f )\n", xA, yA);
         printf(" Massa do corpo            : %.2e\n", mA);
         printf(" Posicao da nave           : ( %.2f , %.2f )\n",x,y);
-        printf(" Distancia do corpo a nave : %.2f\n", distancia(xA,yA,x,y)); /*distancia entre corpo e nave*/
+
+        // Distancia entre corpo e nave
+        printf(" Distancia do corpo a nave : %.2f\n", distancia(xA,yA,x,y)); 
         printf(" Velocidade de escape      : %.2f\n\n", velocidade_esc(xA,yA,mA,x,y)); /*Velocidade de escape*/
+        
         espere_enter();
 
       break ;
 
-
+    // Exibe pontos característicos
     case 'L':
+        // Posição 1
+        fscanf(entrada,"%f %f", &xA, &yA); 
+        
+        // Massa 1
+        fscanf(entrada,"%f", &mA);
 
-      fscanf(entrada,"%f %f", &xA, &yA); /*Posição 1*/
-        fscanf(entrada,"%f", &mA); /*Massa 1*/
-        fscanf(entrada,"%f %f", &xB, &yB); /*Posição 2*/
-        fscanf(entrada,"%f", &mB); /*Massa 2*/
+        // Posição 2
+        fscanf(entrada,"%f %f", &xB, &yB); 
+        
+        // Massa 2
+        fscanf(entrada,"%f", &mB); 
         printf("Opcao [%c]:\n",codigo);
         printf(" Posicao do corpo 1 : ( %.2f , %.2f )\n", xA, yA);
         printf(" Massa do corpo 1   : %.2e\n", mA);
@@ -191,11 +212,12 @@ int main() {
         printf(" Massa do corpo 2   : %.2e\n", mB);
         ponto_L1(xA,yA,mA,xB,yB,mB,&x,&y);
         printf(" Ponto Lagrangeano  : ( %.2f , %.2f )\n\n",x,y);
+        
         espere_enter();
 
       break ;
 
-
+    // Exibe mapa e dados
     case 's':
 
       fscanf(entrada,"%f %f", &x,&y);
@@ -205,39 +227,61 @@ int main() {
       quadrante(X_T,Y_T,&iT,&jT);
       quadrante(X_L,Y_L,&iL,&jL);
       aceleracao_resultante(X_T,Y_T,MTERRA,X_L,Y_L,MLUA,x,y,&ax,&ay);
-      iN=jN=0, x0=x, y0=y, distancia_percorrida=0, hora_viagem=0;/*quadrantes(0,0) para a nave só para imprimir o mapa*/
+      
+      //quadrantes(0,0) para a nave só para imprimir o mapa
+      iN=jN=0, x0=x, y0=y, distancia_percorrida=0, hora_viagem=0;
       mapa=mostre_mapa(iT,jT,iL,jL,x,y,&iN,&jN);
+      
       mostre_dados(hora_viagem,distancia_percorrida,x,y,vx,vy,ax,ay);
       espere_enter();
-      mapa=0;/*Toda vez que 'mapa' for diferente de 0, o mapa é impresso e a variavel 'mapa    volta a zero*/
-      while(!(flag)){/*enquanto variavel 'flag' for 0, o laço ocorre (condiçoes para flag != 0 dentro do laço)*/
+      
+      // Toda vez que 'mapa' for diferente de 0: 
+      // o mapa é impresso e a variavel 'mapa' volta a zero
+      mapa=0;
+
+      // Enquanto variavel 'flag' for 0, o laço ocorre 
+      while(!(flag)){
          distancia_percorrida=distancia_percorrida+distancia(x,y,x0,y0);
          x0=x, y0=y;
-         mapa=mostre_mapa(iT,jT,iL,jL,x,y,&iN,&jN);/*pode alterar 'mapa' para 1 (imprime mapa) ou permanecer em 0*/
+         
+         // Pode alterar 'mapa' para 1 (imprime mapa) ou permanecer em 0
+         mapa=mostre_mapa(iT,jT,iL,jL,x,y,&iN,&jN);
+         
          if(mapa){
-            mapa=0;/**/
+            mapa=0;
             mostre_dados(hora_viagem,distancia_percorrida,x,y,vx,vy,ax,ay);
             espere_enter();
          }
+         
+         
+         // Velocidades vx0 e vy0 imediatamente dt tempo antes do instante atual
          hora_viagem=hora_viagem+dt;
-         vx0=vx, vy0=vy;/*vx0 e vyo correspondem às velocidades imediatamente dt tempo antes do instante atual*/
+         vx0=vx, vy0=vy;
          aceleracao_resultante(X_T,Y_T,MTERRA,X_L,Y_L,MLUA,x,y,&ax,&ay);
          vx=vx+ax*dt;
          vy=vy+ay*dt;
          x=x+vx0*dt;
          y=y+vy0*dt;
+
          if(sao_iguais(hora_viagem,hora_max)) flag++;
          else if(distancia(x,y,X_T,Y_T)<RTERRA)flag++;
          else if(distancia(x,y,X_L,Y_L)<RLUA) flag++;
       }
+
       flag=0;
-      if(sao_iguais(hora_viagem,hora_max)) printf("Apos %.2f horas de voo, a nave ainda esta em orbita!\n", hora_viagem);
-      else if(distancia(x,y,X_T,Y_T)<RTERRA) printf("A nave colide com a Terra em %.2f horas de voo!\n",hora_viagem);
-      else if(distancia(x,y,X_L,Y_L)<RLUA) printf("A nave colide com a Lua em %.2f horas de voo!\n",hora_viagem);
+      
+      if(sao_iguais(hora_viagem,hora_max)) {
+        printf("Apos %.2f horas de voo, a nave ainda esta em orbita!\n", hora_viagem);
+      } else if(distancia(x,y,X_T,Y_T)<RTERRA) {
+        printf("A nave colide com a Terra em %.2f horas de voo!\n",hora_viagem);
+      } else if(distancia(x,y,X_L,Y_L)<RLUA) {
+        printf("A nave colide com a Lua em %.2f horas de voo!\n",hora_viagem);
+      }
+      
       espere_enter();
+      
       printf("\n");
       printf("Fim de Processamento!");
-
 
       break ;
 
@@ -254,9 +298,6 @@ int main() {
 
   return 0 ;
 }
-
-
-
 
 
 /* ----------------------- *
@@ -290,14 +331,11 @@ int sao_iguais(float x1, float x2)
 
 }
 
-
-void quadrante(float x, float y, int *i, int *j) {
+void quadrante(float x, float y, int *i, int *j) 
+{
   *i= (y + 13.5*LARGURA)/LARGURA;
   *j= (x + 5.5*LARGURA)/LARGURA;
-
-
 }
-
 
 /* Recebe os indices (iT,jY), (iL,jL) e (*iN,*jN) dos    *
  * quadrantes no mapa da Terra, Lua e nave,              *
@@ -364,35 +402,57 @@ void aceleracao_gravitacional(float xA, float yA, float mA,
 			      float *ax, float *ay) {
     float acel_total;
     acel_total=G*mA/(distancia(xA,yA,x,y)*distancia(xA,yA,x,y));
-    *ax=acel_total*((xA-x)/distancia(xA,yA,x,y));/*ax=acel_total*cos(alfa)*/
-    *ay=acel_total*((yA-y)/distancia(xA,yA,x,y));/*ay=acel_total*sin(alfa)*/
+    
+    float cos_alpha, sin_alpha;
+    
+    cos_alpha=(xA-x)/distancia(xA,yA,x,y);
+    sin_alpha=(yA-y)/distancia(xA,yA,x,y);
+
+    // ax=acel_total*cos(alfa)
+    *ax=acel_total*cos_alpha;
+
+    // ay=acel_total*sin(alfa)
+    *ay=acel_total*sin_alpha;
 }
 
-void aceleracao_resultante(float xA, float yA, float mA,
+void aceleracao_resultante(
+    float xA, float yA, float mA,
 		float xB, float yB, float mB,
-		float x, float y, float *ax, float *ay) {
+		float x, float y, float *ax, float *ay
+  ) {
     float ax_A,ay_A,ax_B, ay_B;
+
     aceleracao_gravitacional(xA,yA,mA,x,y,&ax_A, &ay_A);
     aceleracao_gravitacional(xB,yB,mB,x,y,&ax_B, &ay_B);
+    
     *ax=ax_A+ax_B;
-    *ay=ay_A*+ay_B;
+    *ay=ay_A+ay_B;
 }
 
-void ponto_L1(float xA, float yA, float mA,
-		  float xB, float yB, float mB,
-		  float *x,  float *y) {
+void ponto_L1(
+    float xA, float yA, float mA,
+    float xB, float yB, float mB,
+    float *x,  float *y
+  ) {
     float L;
-    L=(sqrt(mA)*distancia(xA,yA,xB, yB))/(sqrt(mA)+sqrt(mB));
-    /* (mA-mB)*L^2-2*mA*D*L+A*D*D=0  <==> L=sqrt(mA)*D/sqrt(mA)+sqrt(mB), tanto para mA!mB ou mA=mB */
+    
+    /* 
+      (mA-mB)*L^2-2*mA*D*L+A*D*D=0  <==> L=sqrt(mA)*D/sqrt(mA)+sqrt(mB), 
+      tanto para mA!=mB ou mA=mB 
+    */
+    L=(sqrt(mA)/sqrt(mA)+sqrt(mB))*distancia(xA,yA,xB, yB);
+    
     *x=xA+L*(xB-xA)/distancia(xA,yA,xB, yB);
     *y=yA+L*(yB-yA)/distancia(xA,yA,xB, yB);
 }
 
-void mostre_dados(float hora,
-		  float distancia_percorrida,
-		  float x,  float y,
-		  float vx, float vy,
-		  float ax,   float ay ) {
+void mostre_dados(
+    float hora,
+    float distancia_percorrida,
+    float x,  float y,
+    float vx, float vy,
+    float ax,   float ay 
+  ) {
 
     printf("Tempo de viagem      : %.2f\n",hora);
     printf("Distancia percorrida : %.2f\n",distancia_percorrida);

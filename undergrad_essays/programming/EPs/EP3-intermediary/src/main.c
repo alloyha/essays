@@ -45,7 +45,7 @@ int main() {
     return 0 ;
   }
   
-  // Limpa o \n ...
+  // Limpa o \n...
   scanf("%c", &codigo) ;
 
   // Laco principal
@@ -54,7 +54,7 @@ int main() {
     fscanf(entrada, "%c", &codigo) ;
 
     switch (codigo) {
-
+    
     case 'a':
         // Posição do corpo celeste
         fscanf(entrada,"%f %f", &xA, &yA);
@@ -65,10 +65,11 @@ int main() {
         // Posição nave
         fscanf(entrada,"%f %f", &x, &y);
 
+        printf("Opcao [%c]:\n", codigo);
+        
         // Aceleração gravitacional da nave em relação ao corpo celeste*/
         aceleracao_gravitacional(xA,yA,mA,x,y,&ax,&ay);
 
-        printf("Opcao [%c]:\n", codigo);
         mostre_aceleracao(xA, yA, mA, x, y, ax, ay);
         espere_enter();
 
@@ -92,7 +93,13 @@ int main() {
         fscanf(entrada,"%f %f", &x, &y);
 
         printf("Opcao [%c]:\n",codigo);
-        mostre_aceleracao_resultante(xA, yA, mA, xB, yB, mB, x, y, ax, ay);
+        
+        mostre_aceleracao_resultante(
+          xA, yA, mA, 
+          xB, yB, mB, 
+          x, y, ax, ay
+        );
+
         espere_enter();
       
       break ;
@@ -109,7 +116,11 @@ int main() {
         fscanf(entrada,"%f %f", &x, &y);
 
         printf("Opcao [%c]:\n", codigo);
-        mostre_velocidade_de_escape(xA, yA, mA, x, y);
+
+        mostre_velocidade_de_escape(
+          xA, yA, mA, 
+          x, y
+        );
         
         espere_enter();
 
@@ -130,7 +141,11 @@ int main() {
         fscanf(entrada,"%f", &mB); 
         printf("Opcao [%c]:\n",codigo);
         
-        mostre_lagrangiano(xA, yA, mA, xB, yB, mB, x, y);
+        mostre_lagrangiano(
+          xA, yA, mA, 
+          xB, yB, mB, 
+          x, y
+        );
         
         espere_enter();
 
@@ -146,15 +161,20 @@ int main() {
          
         quadrante(X_T,Y_T,&iT,&jT);
         quadrante(X_L,Y_L,&iL,&jL);
-        aceleracao_resultante(X_T,Y_T,MTERRA,X_L,Y_L,MLUA,x,y,&ax,&ay);
+        aceleracao_resultante(
+          X_T, Y_T, MTERRA,
+          X_L, Y_L, MLUA,
+          x, y, &ax, &ay);
         
         // quadrante (0,0) para a nave só para imprimir o mapa
         iN=jN=0, x0=x, y0=y, distancia_percorrida=0, hora_viagem=0;
-        imprime_mapa=mostre_mapa(iT,jT,iL,jL,x,y,&iN,&jN);
-        
+        imprime_mapa=mostre_mapa(
+          iT, jT, iL, jL,
+          x, y, &iN, &jN
+        );
         mostre_dados_viagem(
           hora_viagem, distancia_percorrida,
-          x,y,vx,vy,ax,ay
+          x, y, vx, vy, ax, ay
         );
 
         espere_enter();
@@ -170,13 +190,16 @@ int main() {
             x0=x, y0=y;
             
             // Pode alterar 'mapa' para 1 (imprime mapa) ou permanecer em 0
-            imprime_mapa=mostre_mapa(iT,jT,iL,jL,x,y,&iN,&jN);
+            imprime_mapa=mostre_mapa(
+              iT, jT, iL, jL, 
+              x, y, &iN, &jN
+            );
             
             if(imprime_mapa){
                 imprime_mapa=false;
                 mostre_dados_viagem(
                   hora_viagem, distancia_percorrida,
-                  x,y,vx,vy,ax,ay
+                  x, y, vx, vy, ax, ay
                 );
                 espere_enter();
             }
@@ -186,15 +209,13 @@ int main() {
             vx0=vx, vy0=vy;
 
             aceleracao_resultante(
-              X_T, Y_T, MTERRA, 
-              X_L, Y_L, MLUA, 
+              X_T, Y_T, MTERRA, X_L, Y_L, MLUA, 
               x, y, &ax, &ay
             );
             
-            vx=vx+ax*dt;
-            vy=vy+ay*dt;
-            x=x+vx0*dt;
-            y=y+vy0*dt;
+            atualizar_estados(
+              &x, &y, &vx, &vy, vx0, vy0, ax, ay, dt 
+            );
             
             if(hora_viagem >= hora_max) fim_loop=true;
             else if(distancia(x,y,X_T,Y_T)<RTERRA) fim_loop=true;
@@ -228,7 +249,6 @@ int main() {
        * nao faz nada ...                                   */
       break;
     }
-
   }
 
   fclose(entrada) ;
