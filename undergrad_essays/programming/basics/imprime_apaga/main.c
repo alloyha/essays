@@ -4,6 +4,24 @@
 #define MAX_ROWS 10
 #define MAX_COLS 10
 
+void apagar_bloco(int n_linhas, int n_colunas) {
+    // Move to the beginning of the next line
+    for(int i=0; i<n_linhas; ++i) {
+        printf("\r");
+
+        // Move the cursor up by 1 position
+        printf("\033[1A");
+
+        for (int j = 0; j < n_colunas; ++j) {
+            printf(" ");
+        }
+    }
+
+    for (int j = 0; j < MAX_COLS; ++j) {
+        printf("\b");
+    }
+}
+
 int main() {
     // Define a 10x10 grid of characters
     char grid[MAX_COLS][MAX_ROWS] = {
@@ -30,21 +48,7 @@ int main() {
 
     sleep(3);
 
-    // Move to the beginning of the next line
-    for(int i=0; i<MAX_ROWS; ++i) {
-        printf("\r");
-
-        // Move the cursor up by 1 position
-        printf("\033[1A");
-
-        for (int j = 0; j < MAX_COLS; ++j) {
-            printf(" ");
-        }
-    }
-
-    for (int j = 0; j < MAX_COLS; ++j) {
-        printf("\b");
-    }
+    apagar_bloco(MAX_COLS, MAX_ROWS);    
 
     return 0;
 }
