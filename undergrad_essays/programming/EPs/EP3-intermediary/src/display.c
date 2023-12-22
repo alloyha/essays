@@ -124,10 +124,11 @@ void mostre_dados_viagem(
 
 void mostre_lagrangiano(
   float xA, float yA, float mA,
-  float xB, float yB, float mB,
-  float x, float y
+  float xB, float yB, float mB
 ) 
 {
+  float x, y;
+
   printf(" Posicao do corpo 1 [Km, Km]        : ( %.2f , %.2f )\n", xA, yA);
   printf(" Massa do corpo 1   [Kg]            : %.2e\n", mA);
   printf(" Posicao do corpo 2 [Km, Km]        : ( %.2f , %.2f )\n", xB, yB);
@@ -143,11 +144,11 @@ void mostre_velocidade_de_escape(
 {
     printf(" Posicao do corpo [Km, Km]        : ( %.2f , %.2f )\n", xA, yA);
     printf(" Massa do corpo   [Kg]            : %.2e\n", mA);
-    printf(" Posicao da nave  [Km, Km]        : ( %.2f , %.2f )\n",x,y);
+    printf(" Posicao da nave  [Km, Km]        : ( %.2f , %.2f )\n", x, y);
 
     // Distancia entre corpo e nave
-    float dist_A = distancia(xA,yA,x,y);
-    float v_esc = velocidade_esc(xA,yA,mA,x,y);
+    float dist_A = distancia(xA, yA, x, y);
+    float v_esc = velocidade_esc(xA, yA, mA, x, y);
 
     printf(" Distancia do corpo a nave [Km]   : %.2f\n", dist_A); 
     printf(" Velocidade de escape      [Km/h] : %.2f\n\n", v_esc); 
@@ -156,10 +157,11 @@ void mostre_velocidade_de_escape(
 void mostre_aceleracao_resultante(
   float xA, float yA, float mA,
   float xB, float yB, float mB,
-  float x, float y, 
-  float ax, float ay
+  float x, float y
 )
 {
+    float ax, ay;
+
     printf(" Posicao do corpo 1 [Km, Km]      : ( %.2f , %.2f )\n", xA, yA);
     printf(" Massa do corpo 1   [Kg]          : %.2e\n", mA);
     printf(" Posicao do corpo 2 [Km, Km]      : ( %.2f , %.2f )\n", xB, yB);
@@ -192,8 +194,7 @@ void mostre_aceleracao(
 }
 
 void opcao_aceleracao(FILE *entrada) {
-  float xA, yA, mA;
-  float xB, yB, mB; 
+  float xA, yA, mA; 
   float x, y, ax, ay;
 
   // Posição do corpo celeste
@@ -216,7 +217,7 @@ void opcao_aceleracao(FILE *entrada) {
 void opcao_aceleracao_resultante(FILE *entrada) {
   float xA, yA, mA;
   float xB, yB, mB;
-  float x, y, ax, ay;
+  float x, y;
   
   // Posição 1
   fscanf(entrada,"%f %f", &xA, &yA); 
@@ -235,15 +236,11 @@ void opcao_aceleracao_resultante(FILE *entrada) {
 
   printf("Opcao [\'A\']:\n");
   
-  mostre_aceleracao_resultante(
-    xA, yA, mA, xB, yB, mB, 
-    x, y, ax, ay
-  );
+  mostre_aceleracao_resultante(xA, yA, mA, xB, yB, mB, x, y);
 }
 
 void opcao_velocidade_de_escape(FILE *entrada) {
   float xA, yA, mA;
-  float xB, yB, mB;
   float x, y;
 
   // Posição do corpo celeste
@@ -257,15 +254,12 @@ void opcao_velocidade_de_escape(FILE *entrada) {
 
   printf("Opcao [\'e\']:\n");
 
-  mostre_velocidade_de_escape(
-    xA, yA, mA, x, y
-  );
+  mostre_velocidade_de_escape(xA, yA, mA, x, y);
 }
 
 void opcao_lagrangiano(FILE *entrada){
   float xA, yA, mA;
   float xB, yB, mB;
-  float x, y;
 
   // Posição 1
   fscanf(entrada,"%f %f", &xA, &yA); 
@@ -280,54 +274,41 @@ void opcao_lagrangiano(FILE *entrada){
   fscanf(entrada,"%f", &mB); 
   printf("Opcao [\'L\']:\n");
   
-  mostre_lagrangiano(
-    xA, yA, mA, xB, yB, mB, 
-    x, y
-  );
+  mostre_lagrangiano(xA, yA, mA, xB, yB, mB);
 }
 
-void imprime_lancamento(FILE* entrada) {
-  float x0, y0, distancia_percorrida;
+void opcao_viagem(FILE* entrada) {
+  float x0, y0, vx0, vy0, distancia_percorrida;
   float x, y, vx, vy, ax, ay;
   float hora_max, hora_viagem, dt;
-  float iT, jT, iL, jL, iN, jN;
+  int iT, jT, iL, jL, iN, jN;
 
-  bool imprime_mapa=false;
+  bool imprime_mapa;
+  bool fim_loop=false;
+  bool fim_duracao=false;
+  bool aterrisou_terra=false, aterrisou_lua=false;  
 
   fscanf(entrada,"%f %f", &x, &y);
   fscanf(entrada,"%f %f", &vx, &vy);
   fscanf(entrada,"%f", &hora_max);
   fscanf(entrada,"%f", &dt);
     
-  quadrante(X_T,Y_T,&iT,&jT);
-  quadrante(X_L,Y_L,&iL,&jL);
+  quadrante(X_T, Y_T, &iT, &jT);
+  quadrante(X_L, Y_L, &iL, &jL);
   aceleracao_resultante(
-    X_T, Y_T, MTERRA,
-    X_L, Y_L, MLUA,
-    x, y, &ax, &ay);
+    X_T, Y_T, MTERRA, X_L, Y_L, MLUA,
+    x, y, &ax, &ay
+  );
   
   // quadrante (0,0) para a nave só para imprimir o mapa
-  iN=jN=0, x0=x, y0=y, distancia_percorrida=0, hora_viagem=0;
-  imprime_mapa=mostre_mapa(
-    iT, jT, iL, jL,
-    x, y, &iN, &jN
-  );
+  iN = jN = 0;
+  x0 = x, y0 = y;
+  distancia_percorrida=0, hora_viagem=0;
+  imprime_mapa = mostre_mapa(iT, jT, iL, jL, x, y, &iN, &jN);
+
   mostre_dados_viagem(
-    hora_viagem, distancia_percorrida,
-    x, y, vx, vy, ax, ay
+    hora_viagem, distancia_percorrida, x, y, vx, vy, ax, ay
   );
-}
-
-void imprime_viagem(FILE* entrada) {
-  bool imprime_mapa=false;
-  bool fim_loop=false;
-  bool fim_duracao=false;
-  bool aterrisou_terra=false, aterrisou_lua=false;
-
-  float x0, y0, vx0, vy0, distancia_percorrida;
-  float x, y, vx, vy, ax, ay;
-  float hora_max, hora_viagem, dt;
-  float iT, jT, iL, jL, iN, jN;
 
   // Enquanto variavel 'fim_loop' for 0, o laço ocorre 
   while(!fim_loop){
@@ -336,9 +317,7 @@ void imprime_viagem(FILE* entrada) {
       x0=x, y0=y;
       
       // Pode alterar 'mapa' para 1 (imprime mapa) ou permanecer em 0
-      imprime_mapa=mostre_mapa(
-        iT, jT, iL, jL, x, y, &iN, &jN
-      );
+      imprime_mapa = mostre_mapa(iT, jT, iL, jL, x, y, &iN, &jN);
       
       if(imprime_mapa){
           imprime_mapa=false;
@@ -374,11 +353,3 @@ void imprime_viagem(FILE* entrada) {
       printf("A nave colide com a Lua em %.2f horas de voo!\n", hora_viagem);
   }
 }
-
-void opcao_viagem(FILE* entrada) {
-  imprime_lancamento(&entrada);
-  espere_enter();
-  
-  imprime_viagem(&entrada);
-  espere_enter();
-} 

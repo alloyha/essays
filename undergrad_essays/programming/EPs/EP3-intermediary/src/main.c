@@ -15,10 +15,11 @@ int main() {
   printf("\n") ;
 
   entrada = fopen(nome_arquivo, "r") ;
+
   if(entrada==NULL) {
     printf("Arquivo %s nao existe ou ocorreu erro na abertura.\n\n",
 	    nome_arquivo) ;
-    return 0 ;
+    return 1 ;
   }
   
   // Iniciar simulação de acordo com o arquivo de entrada

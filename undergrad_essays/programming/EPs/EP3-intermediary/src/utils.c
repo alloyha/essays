@@ -65,8 +65,8 @@ void quadrante(float x, float y, int *i, int *j)
    * @param i Ponteiro para a variável que armazenará a coordenada i do quadrante.
    * @param j Ponteiro para a variável que armazenará a coordenada j do quadrante.
    */
-  *i= (y + 13.5*LARGURA)/LARGURA;
-  *j= (x + 5.5*LARGURA)/LARGURA;
+  *i= (int) (y + 13.5*LARGURA)/LARGURA;
+  *j= (int) (x + 5.5*LARGURA)/LARGURA;
 }
 
 int sao_iguais(float x1, float x2)

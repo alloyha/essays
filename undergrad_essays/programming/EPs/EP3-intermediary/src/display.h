@@ -31,8 +31,7 @@ void mostre_dados_viagem(
 
 void mostre_lagrangiano(
   float xA, float yA, float mA,
-  float xB, float yB, float mB,
-  float x, float y
+  float xB, float yB, float mB
 );
 
 void mostre_velocidade_de_escape(
@@ -51,6 +50,10 @@ void mostre_aceleracao(
   float x, float y, float ax, float ay
 );
 
+void mostre_lancamento(FILE* entrada);
+
+void mostre_viagem(FILE* entrada);
+
 void opcao_aceleracao(FILE *entrada);
 
 void opcao_aceleracao_resultante(FILE *entrada);
@@ -59,9 +62,6 @@ void opcao_lagrangiano(FILE *entrada);
 
 void opcao_velocidade_de_escape(FILE *entrada);
 
-void imprime_lancamento(FILE* entrada);
-
-void imprime_viagem(FILE* entrada);
 
 void opcao_viagem(FILE *entrada);
 
