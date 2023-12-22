@@ -103,8 +103,8 @@ void ponto_lagrangeano(
     float ratio = sqrt(mA)/(sqrt(mA)+sqrt(mB));
     lambda=ratio*dist_AB;
 
-    *x=xA+(xB-xA)*lambda/dist_AB;
-    *y=yA+(yB-yA)*lambda/dist_AB;
+    *x=xA+lambda*(xB-xA)/dist_AB;
+    *y=yA+lambda*(yB-yA)/dist_AB;
 }
 
 void atualizar_estados(
