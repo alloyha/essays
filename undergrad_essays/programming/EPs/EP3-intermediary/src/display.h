@@ -50,9 +50,11 @@ void mostre_aceleracao(
   float x, float y, float ax, float ay
 );
 
-void mostre_lancamento(FILE* entrada);
-
-void mostre_viagem(FILE* entrada);
+void mostre_viagem(
+    int iT, int jT, int iL, int jL, int *iN, int *jN, 
+    float x, float y, float vx, float vy, float ax, float ay,
+    float hora_viagem, float distancia_percorrida
+);
 
 void opcao_aceleracao(FILE *entrada);
 
@@ -61,7 +63,6 @@ void opcao_aceleracao_resultante(FILE *entrada);
 void opcao_lagrangiano(FILE *entrada);
 
 void opcao_velocidade_de_escape(FILE *entrada);
-
 
 void opcao_viagem(FILE *entrada);
 

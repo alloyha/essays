@@ -9,6 +9,12 @@ void espere_enter();
 
 void apagar_bloco(int n_linhas, int n_colunas);
 
+void apagar_linhas(int n_linhas);
+
+void apagar_espere_enter();
+
+void apagar_mapa();
+
 void quadrante(float x, float y, int *i, int *j);
 
 int sao_iguais(float x1, float x2);

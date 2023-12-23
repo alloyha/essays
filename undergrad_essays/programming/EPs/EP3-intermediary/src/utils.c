@@ -55,6 +55,18 @@ void apagar_bloco(int n_linhas, int n_colunas) {
     }
 }
 
+void apagar_linhas(int n_linhas){
+  apagar_bloco(n_linhas, MAXCOL+2);
+}
+
+void apagar_espere_enter(){
+  apagar_linhas(5);
+}
+
+void apagar_mapa(){
+  apagar_linhas(MAXLINHA);
+}
+
 void quadrante(float x, float y, int *i, int *j) 
 {
   /**

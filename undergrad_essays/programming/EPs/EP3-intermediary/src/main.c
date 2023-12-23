@@ -2,9 +2,7 @@
 #include <math.h>
 #include "simulation.h"
 
-/* ----------------------- *
- * MAIN                    *
- * ----------------------- */
+
 int main() {
 
   FILE  *entrada ;
@@ -30,3 +28,17 @@ int main() {
   return 0 ;
 }
 
+/*
+int main() {
+  int iT, jT, iL, jL, iN, jN;
+  float x, y;
+
+  quadrante(X_T, Y_T, &iT, &jT);
+  quadrante(X_L, Y_L, &iL, &jL);
+
+  mostre_mapa(iT, jT, iL, jL, x, y, &iN, &jN);
+  espere_enter();
+  apagar_espere_enter();
+  apagar_mapa();
+}
+*/

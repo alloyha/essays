@@ -108,15 +108,40 @@ void ponto_lagrangeano(
 }
 
 void atualizar_estados(
+  float dt, 
   float* x, float* y,
   float* vx, float* vy, 
-  float vx0,  float vy0,
-  float ax,  float ay,
-  float dt 
+  float vx_1,  float vy_1,
+  float ax_1,  float ay_1
 )
 {
-  *vx=(*vx)+ax*dt;
-  *vy=(*vy)+ay*dt;
-  *x=(*x)+vx0*dt;
-  *y=(*y)+vy0*dt;
+  *x=(*x)+vx_1*dt;
+  *y=(*y)+vy_1*dt;
+  *vx=(*vx)+ax_1*dt;
+  *vy=(*vy)+ay_1*dt;
+}
+
+void atualizar_variaveis(
+    float dt, float *hora_viagem, float *distancia_percorrida,
+    float *x, float *y, float *vx, float *vy, float *ax, float *ay,
+    float *x_1, float *y_1, float *vx_1, float *vy_1
+) {
+    // Atualiza valores
+    float dist_AB = distancia(*x, *y, *x_1, *y_1);
+    *distancia_percorrida=*distancia_percorrida+dist_AB;
+    
+    *hora_viagem = *hora_viagem+dt;
+    *vx_1 = *vx;
+    *vy_1 = *vy;
+    
+    aceleracao_resultante(
+        X_T, Y_T, MTERRA, X_L, Y_L, MLUA, 
+        *x, *y, ax, ay
+    );
+    
+    atualizar_estados(
+        dt, 
+        x, y, vx, vy, 
+        *vx_1, *vy_1, *ax, *ay 
+    );
 }

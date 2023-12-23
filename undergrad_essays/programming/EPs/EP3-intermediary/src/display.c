@@ -87,13 +87,15 @@ bool mostre_mapa(
   if(imprime) {
     imprimir_cerca();
 
-    for (int i = 1; i <= MAXLINHA; i++)
-      for (int j = 0; j <= MAXCOL+1; j++)
+    for (int i = 1; i <= MAXLINHA; i++){
+      for (int j = 0; j <= MAXCOL+1; j++){
         imprimir_quadro(
           i, j, novo_i, novo_j,
           iT, jT, iL, jL
         );
-
+      }
+    }
+      
     imprimir_cerca();
 
     *iN = novo_i;
@@ -193,6 +195,26 @@ void mostre_aceleracao(
   printf(" Aceleracao gravitacional [Km/h^2]      : ( %.2f , %.2f )\n\n",ax, ay);
 }
 
+bool mostre_viagem(
+    int iT, int jT, int iL, int jL, int *iN, int *jN, 
+    float x, float y, float vx, float vy, float ax, float ay,
+    float hora_viagem, float distancia_percorrida
+  ) {
+
+    
+    bool imprime_mapa = mostre_mapa(iT, jT, iL, jL, x, y, iN, jN);
+    if(imprime_mapa){
+      mostre_dados_viagem(
+        hora_viagem, distancia_percorrida, 
+        x, y, vx, vy, ax, ay
+      );
+
+      espere_enter();
+    }
+    
+    return imprime_mapa;
+}
+
 void opcao_aceleracao(FILE *entrada) {
   float xA, yA, mA; 
   float x, y, ax, ay;
@@ -278,13 +300,13 @@ void opcao_lagrangiano(FILE *entrada){
 }
 
 void opcao_viagem(FILE* entrada) {
-  float x0, y0, vx0, vy0, distancia_percorrida;
+  float x_1, y_1, vx_1, vy_1, distancia_percorrida;
   float x, y, vx, vy, ax, ay;
   float hora_max, hora_viagem, dt;
   int iT, jT, iL, jL, iN, jN;
 
   bool imprime_mapa;
-  bool fim_loop=false;
+  bool fim_viagem=false;
   bool fim_duracao=false;
   bool aterrisou_terra=false, aterrisou_lua=false;  
 
@@ -292,57 +314,50 @@ void opcao_viagem(FILE* entrada) {
   fscanf(entrada,"%f %f", &vx, &vy);
   fscanf(entrada,"%f", &hora_max);
   fscanf(entrada,"%f", &dt);
-    
-  quadrante(X_T, Y_T, &iT, &jT);
-  quadrante(X_L, Y_L, &iL, &jL);
+  
+  // Aceleração resultante da nave em relação a Terra e Lua
   aceleracao_resultante(
     X_T, Y_T, MTERRA, X_L, Y_L, MLUA,
     x, y, &ax, &ay
   );
   
-  // quadrante (0,0) para a nave só para imprimir o mapa
-  iN = jN = 0;
-  x0 = x, y0 = y;
-  distancia_percorrida=0, hora_viagem=0;
-  imprime_mapa = mostre_mapa(iT, jT, iL, jL, x, y, &iN, &jN);
+  // Obtem quadrantes da Terra e Lua
+  quadrante(X_T, Y_T, &iT, &jT);
+  quadrante(X_L, Y_L, &iL, &jL);
 
-  mostre_dados_viagem(
-    hora_viagem, distancia_percorrida, x, y, vx, vy, ax, ay
+  // Quadrante (0,0) para a nave só para imprimir o mapa
+  iN = jN = 0;
+  x_1 = x, y_1 = y;
+  distancia_percorrida=0, hora_viagem=0;
+
+  mostre_viagem(
+    iT, jT, iL, jL, &iN, &jN, 
+    x, y, vx, vy, ax, ay,
+    hora_viagem, distancia_percorrida
   );
 
   // Enquanto variavel 'fim_loop' for 0, o laço ocorre 
-  while(!fim_loop){
-      // Atualiza valores
-      distancia_percorrida=distancia_percorrida+distancia(x,y,x0,y0);
-      x0=x, y0=y;
+  while(!fim_viagem){
       
       // Pode alterar 'mapa' para 1 (imprime mapa) ou permanecer em 0
-      imprime_mapa = mostre_mapa(iT, jT, iL, jL, x, y, &iN, &jN);
-      
-      if(imprime_mapa){
-          imprime_mapa=false;
-          mostre_dados_viagem(
-            hora_viagem, distancia_percorrida, x, y, vx, vy, ax, ay
-          );
-          espere_enter();
-      }
+      mostre_viagem(
+        iT, jT, iL, jL, &iN, &jN, 
+        x, y, vx, vy, ax, ay,
+        hora_viagem, distancia_percorrida
+      );
       
       // Velocidades vx0 e vy0 imediatamente dt tempo antes do instante atual
-      hora_viagem=hora_viagem+dt;
-      vx0=vx, vy0=vy;
+      atualizar_variaveis(
+          dt, &hora_viagem, &distancia_percorrida,
+          &x, &y, &vx, &vy, &ax, &ay,
+          &x_1, &y_1, &vx_1, &vy_1
+      );
 
-      aceleracao_resultante(
-        X_T, Y_T, MTERRA, X_L, Y_L, MLUA, x, y, &ax, &ay
-      );
-      
-      atualizar_estados(
-        &x, &y, &vx, &vy, vx0, vy0, ax, ay, dt 
-      );
-      
       fim_duracao = hora_viagem >= hora_max;
       aterrisou_terra = distancia(x, y, X_T, Y_T)<RTERRA;
       aterrisou_lua = distancia(x, y, X_L, Y_L)<RLUA;
-      fim_loop = fim_duracao | aterrisou_terra | aterrisou_lua;
+      
+      fim_viagem = fim_duracao | aterrisou_terra | aterrisou_lua;
   }
   
   if(fim_duracao) {
